@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>eZdravko - Preventiva</title>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="stylesheet/glavnistil.css">
+</head>
+<body>
+	<nav class="navbar navbar-default" role="navigation">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="index.html" title="eZdravko - Preventiva">eZdravko	</a>
+	    </div>
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">	
+	        <li class="active"><a href="">Navodila <span class="sr-only">(current)</span></a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+	<div id="content">
+		<div class="row"> 
+			<!-- Naslov -->
+			<div class="page-header"><h2>eZdravko pomočnik</h2></div>				
+			
+			<div class="col-lg-10 col-md-12	 col-sm-12 col-xs-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4>Navodila</h4>
+					</div>
+					
+					<div class="panel-body">
+				    	<p>Spletna aplikacija eZdravko je namenjena vsem ljudem, ki želijo imeti pregled nad osnovnimi 
+						zdravstvenimi podatki in aktivnostmi(kot so to npr.: meritve telesne višine, teže, temperature, krvnenga tlaka, nasičenosti krvi s kisikom, ipd.), poleg tega pa videti vsa, v preteklosti predpisana zdravila in njihove morebitne stranske učinke(in alternative oz. podobna zdravila). V primeru (neželenih) odstopanj od običajnih vrednosti, nas eZdravko o tem obvesti, prav tako pa nam zna (do neke mere) tudi svetovati(npr. kaj narediti v primeru podhranjenost, neobičajen krvni tlak, ipd...).</p>
+
+						<p>V prihodnje bi lahko sistem razširili do te mere, da bi uporabnik določene podatke vpisoval kar sam(telesno temperaturo, počutje, ipd.) ter s tem ustvarjal strukturirana poročila(samodiagnoze), ki bi jih lahko nato delil s osebnim zdravnikom, slednji pa bi dobljene podatke uporabil za boljšo presojo.</p>
+
+
+
+
+						<p>Zunanji vir je namenjen pridobivanju informacij o predpisanih zdravilih pacienta(kratek opis, pomembne informacije, stranski učinki, ipd.). Vse skupaj je uporabniku predstavljeno na enem mestu, kjer lahko hitreje/lažje najde pomembne informacije določenega zdravila. Pri tem lahko sam lažje ugotovi, ali mu določeno zdravilo povzroča težave in  kakšne so morebitne alternative/zamenjave zdravila (uporabno, v primeru: če se zdravila ne da dobiti/ga ni na zalogi, je alternativa cenovno bolj ugodna, stranski učniki nesprejemljivi, ipd.).</p>
+
+						<p>The resources below have been provided to help narrow your search to specific, targeted drug information.
+						http://www.drugs.com/</p>
+
+						<h5>Uporaba:</h5>
+						<ul>
+						<li>preko URL http://www.drugs.com/search.php?searchterm="iskano zdravilo" <br>najdemo prvo pojavitev/zadetek znotraj contentBox: <br>	
+						< div class="snippet search-result" > < h3>< a href="URL naslov zdravila" >< b>Ime zdravila</ b></ a> ...</ div></li>
+						<li>iz URL naslova za zdravilo izluščimo vse relevatne podatke</li>
+						</ul>
+
+						<h5>Primer:</h5> 
+						<ul>
+							<li>http://www.drugs.com/search.php?searchterm=aspirin </li>
+							<li>znotraj contentBox: <br>
+							< div class="snippet search-result" >< h3>< a href="http://www.drugs.com/mtm/aspirin.html" >< b>Aspirin</ b></ a> < img src="//images.ddccdn.com/img/icons/star.png" title="Editor's Pick" alt="Editor's Pick" ></ h3>< p class="search-result-desc" >< b>Aspirin</ b> is a salicylate (sa-LIS-il-ate). It works by reducing substances in the body that cause pain, fever, and inflammation. < b>Aspirin</ b> is used to treat pain, and reduce fever or inflammation. < b>Aspirin</b> is sometimes used to treat or prevent heart attacks, strokes, and chest pain (angina). < b>Aspirin</ b> should... </ p>< ul class="search-result-secondary column-list-2" >< li>< a href="/sfx/aspirin-side-effects.html" >Side Effects</ a></ li>< li>< a href="/pregnancy/aspirin.html" >Pregnancy / Breastfeeding</ a></ li>< li>< a href="/drug-interactions/aspirin.html" >Drug Interactions</ a></ li>< li>< a href="/answers/support-group/aspirin/" >Support Group Q &amp; A</ a></ li>< li>< a href="/comments/aspirin/" >User Reviews</ a></ li></ ul></ div> <br>	
+							</li>
+							<li> -> http://www.drugs.com/mtm/aspirin.html <br>
+							parse data...
+							</li>
+						</ul>
+			  		</div> <!-- panel body -->
+
+		  		</div> <!-- panel default -->
+		  	</div> <!-- col-size class -->
+		</div> <!-- row -->
+	</div> <!-- content -->
+
+</body>
+</html>
+
+
+
+
+
