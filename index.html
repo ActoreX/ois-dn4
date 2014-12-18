@@ -6,7 +6,10 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src="generirajUporabnike.js"></script>
+		<script src="uporabaPodatkov.js"></script>
+
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="stylesheet/glavnistil.css">
 	</head>
@@ -26,7 +29,18 @@
 		    <!-- Collect the nav links, forms, and other content for toggling -->
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      <ul class="nav navbar-nav">	
+		        
 		        <li><a href="navodila.html">Navodila <span class="sr-only">(current)</span></a></li>
+		        
+		        <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Generator 	<span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="#">3 uporabnike</a></li>    <!-- TODO izpis ehrIdjev kreiranih uporabnikov -->         
+		            <li><a href="#">Nov EHR zapis</a></li>	
+		   			<li><a href="#">Naključne podatke</a></li>
+		          </ul>
+		        </li>
+
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Izberi uporabnika <span class="caret"></span></a>
 		          <ul class="dropdown-menu" role="menu">
@@ -35,32 +49,52 @@
 		   			<li><a href="#Chuck">Chuck</a></li>
 		          </ul>
 		        </li>
-		      </ul>
+
+		      </ul> <!-- navbar-nav -->
 		    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>
 
 		<div id="content">
 			<!-- naslov strani -->
-			<div class="row">
+			<div class="row">	
 				<div class="page-header">	
-					<h2>eZdravko pomočnik</h2>				
+					<h2>eZdravko pomočnik</h2>
 				</div>
+			</div>
+
+			<!-- 0 vrstica -->
+			<div class="row">
+				<div class="navbar-form navbar-right" role="search">
+				    <input type="text" class="form-control" placeholder="Vnesi EhrId">	
+				 	<button class="btn btn-default">Potrdi</button>
+				</div>
+
+				<div style="display: inline-block; padding-bottom:30px;" class="col-lg-6 col-md-7 col-sm-8">	
+					<img src="blue-user-icon.png" class="img-rounded" style="width:90px; float:left;">
+					<div style="float:left; margin-left: 10px;">
+						<p id="ime">Ime:  Keny</p>
+						<p id="priimek">Priimek:  Suu</p>
+						<p id="ehrId">Ehr ID: d31a383a-67c2-4efb-a32f-ae161ef64eae</p>
+					</div>
+				</div>
+				
 			</div>
 
 			<!-- prva vrstica -->
 			<div class="row">
-				<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="col-lg-6 col-md-6 col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4>Višina</h4>
 						</div>
 						<div class="panel-body">
-					    	Basic panel example
+					    	<div id="visina">
+					    	</div>
 				  		</div>
 			  		</div>
 				</div>
-				<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="col-lg-6 col-md-6 col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4>Teža</h4>
@@ -74,7 +108,7 @@
 
 			<!-- druga vrstica -->
 			<div class="row">
-				<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="col-lg-6 col-md-6 col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4>Telesna temperatura</h4>
@@ -84,7 +118,7 @@
 				  		</div>
 			  		</div>
 				</div>
-				<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="col-lg-6 col-md-6 col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4>Krvni tlak</h4>

@@ -149,7 +149,7 @@ function kreirajEhrZaBolnike()
 
 
 
-function generirajPodatke(ehrId)
+function generirajPodatkeRandom(ehrId)
 {	
 	var sessionId = getSessionId();
 
@@ -275,7 +275,7 @@ function generirajPodatke(ehrId)
 	});
 }
 
-function dodajZapiseBolnikov()
+function dodajZapiseBolnikovRandom()
 {
 	// [10-19 podatkov]
 	var i = Math.floor(Math.random()*10 + 10);

@@ -10,3 +10,21 @@
 	margin-left: auto;
 	margin-right: auto;
 }
+
+
+
+#profilUporabnika #ime
+{
+	background-color: red;
+}
+
+#profilUporabnika #priimek
+{
+	background-color: red;
+}
+
+#profilUporabnika #ehrId
+{
+	background-color: red;
+}
+
