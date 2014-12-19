@@ -126,16 +126,6 @@ function preberiPodatkeZaVitalneZnake(ehrId)
 function izlusciPodatkeVitalnihZnakov(rows)
 {
 	var podatkiTelVisina = new Array();
-	var maxVisina, minVisina, padding=48;
-	if(rows.length>0)
-	{
-		maxVisina = rows[0].telVisinaVr.value.magnitude;
-		minVisina = rows[0].telVisinaVr.value.magnitude;
-	} else {
-		return;
-	}
-	console.log(rows.length);
-
 
 	for(var key in rows)
 	{	
@@ -144,11 +134,6 @@ function izlusciPodatkeVitalnihZnakov(rows)
 		// visina v cm
 		var vrednostMeritveVisine = rows[key].telVisinaVr.value.magnitude;
 		
-		if(minVisina > vrednostMeritveVisine) {
-			minVisina = vrednostMeritveVisine;
-		} else if(maxVisina < vrednostMeritveVisine) {
-			maxVisina = vrednostMeritveVisine;
-		}
 		podatkiTelVisina.push({"cas": new Date(casMeritveVisine), "visina":vrednostMeritveVisine});
 
 	}
@@ -162,50 +147,96 @@ function izlusciPodatkeVitalnihZnakov(rows)
 		return 0;	
 	});
 
+	// Graf za predstavitev telesne temperature, višine in krvnega pritiska.
 
-	// maxVisina, minVisina, podatkiTelVisina(visina, datum)
+	var margin = {
+		top: 20,
+		right: 20, 
+		bottom: 86,
+		left: 60
+	},
+		width = 600 - margin.left - margin.right,
+		height = width - margin.top - margin.bottom;
+
+	var x = d3.scale.ordinal()
+		.rangeRoundBands([0, width], .06);
+
+	var y = d3.scale.linear()
+		.rangeRound([height, 0]);
+
+	var color = d3.scale.ordinal()
+		.range(["#308fef", "5fa9f3", "1176db"]);
+
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom")
+		.tickFormat(d3.time.format("%Y-%m-%d"));
+
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left")
+		.ticks(10);
+
+	var svg = d3.select("#visina").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-	var width = $("#visina").width();
-	var height = width/2;
 
-	var vis = d3.select("#visina")
-		.append("svg:svg")
-			.attr("width", width)
-            .attr("height", height);
+	x.domain(podatkiTelVisina.map(function(d){
+		return d.cas;
+	}));	
 
-    var yScale = d3.scale.linear()
-	    .domain([0, maxVisina])   
-		.range([height - padding, padding]); 
+	y.domain([0, d3.max(podatkiTelVisina, function(d){
+		return d.visina;
+	})]);
 
-   	var xScale = d3.time.scale()
-	    .domain([podatkiTelVisina[0].cas, podatkiTelVisina[podatkiTelVisina.length-1].cas])    // values between for month of january
-		.range([padding, width - padding * 2]);
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis)
+	.selectAll("text")
+		.style("text-anchor", "end")
+		.attr("dx", "0.60em")
+		.attr("dy", "0.80em")
+		.attr("transform", "rotate(-45)" )
+	.append("text")
+		.attr("dy", "-.82em")
+      	.style("text-anchor", "end");
 
-	alert(podatkiTelVisina[0].cas);
+	svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis)
+	.append("text")
+      	.attr("dy", "-.82em")
+      	.style("text-anchor", "end")
+      	.text("Višina (cm)");
 
-    var yAxis = d3.svg.axis()
-        .orient("left")
-        .scale(yScale);
-    
+    var visina_info = $("#visina_info");
 
-    var xAxis = d3.svg.axis()
-        .orient("bottom")
-        .scale(xScale);
-        
+    svg.selectAll("bar")
+    	.data(podatkiTelVisina)
+    .enter().append("rect")
+    	.style("fill", "steelblue")
+    	.style("opacity", .8)
+    	.attr("x", function(d) { return x(d.cas); })
+    	.attr("width", x.rangeBand())
+    	.attr("y", function(d) {return y(d.visina); })
+    	.attr("height", function(d) { return height - y(d.visina); })
 
-    vis.append("g")
-        .attr("transform", "translate("+padding+",0)")
-        .call(yAxis);
+    	.on("mouseover", function(d){
+    		visina_info.css("visibility", "visible");
+    		visina_info.html("<small style='color:green; font-style:italic;'>" + d.cas + " </small>&nbsp;&nbsp;&nbsp;&nbsp;" + d.visina + "cm");
+    		$(this).css("fill", "green");
 
-    vis.append("g")
-        .attr("transform", "translate(0," + (height - padding) + ")")
-        .call(xAxis);
+    	})
+    	.on("mouseout", function(d){
+    		visina_info.css("visibility", "hidden");
+    		$(this).css("fill", "steelblue");
+    	});
 
-    // vis.selectAll(".xaxis text")  // select all the text elements for the xaxis
-    //     .attr("transform", function(d) {
-    //     	return "translate(" + this.getBBox().height*-2 + "," + this.getBBox().height + ")rotate(-45)";z
-    //     });
 
 }
 
