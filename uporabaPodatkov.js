@@ -374,7 +374,7 @@ function telesnaTemperaturaIzpis(podatkiTelTemp)
 
 function telesnaTezaIzpis(podatkiTelTeza)
 {
-	podatkiTelTeza.sort(function(a,b){	
+	podatkiTelTeza.sort(function(b,a){	
 		if(a.cas < b.cas)
 			return -1;
 		else if(a.cas > b.cas)
@@ -391,6 +391,14 @@ function telesnaTezaIzpis(podatkiTelTeza)
 
 function krvniTlakIzpis(podatkiTelTlak)
 {
+	podatkiTelTlak.sort(function(b,a){	
+		if(a.cas < b.cas)
+			return -1;
+		else if(a.cas > b.cas)
+			return 1;
+		return 0;	
+	});
+
 	for(key in podatkiTelTlak)
 	{
 		$("#tabela_krvniTlak tr:last").after("<tr><td>" + podatkiTelTlak[key]["cas"] + "</td><td>" + podatkiTelTlak[key]["sistolicni"] + "</td><td>" + podatkiTelTlak[key]["diastolicni"] + "</td></tr>");
