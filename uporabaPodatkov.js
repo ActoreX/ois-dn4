@@ -450,7 +450,7 @@ function izpisiPodatkeZaZdravila(rows)
 	d3.json("zdravila.json", function(json) {		
 		if(json==null)
 			//alert("Error");
-			;;
+		;
 		else 
 		{
 			console.log(json);
