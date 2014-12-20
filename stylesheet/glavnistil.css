@@ -41,3 +41,8 @@
    stroke: #000;
    shape-rendering: crispEdges;
  }
+
+ .gumb
+ {
+ 	cursor:pointer;
+ }

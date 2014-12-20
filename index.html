@@ -163,13 +163,59 @@
 				<div class="col-lg-12 col-md-12 col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h4>Zgodovina predpisanih zdravil</h4>
+							<h4>Zgodovina predpisanih zdravil<span id="zdravilo_info" style="float:right;"><span style="font-size: 12px;">[20.05.2014 - 1.1.2015] - Zaužite pred obrokom - Količina dnevno: 3</span> </span></h4>
 						</div>
 						<div class="panel-body">
-					    	Basic panel example
-				  		</div>
+					    	<!-- Master -->
+					    	<div class="col-lg-6 col-md-6 col-sm-6">
+					    		<div class="table-responsive">
+									<table id="tabela_zdravil" class="table table-hover">
+										<tr>
+											<th>Zdravilo:</th>
+											<th>Predpisal(a):</th>
+											<th>Smernice:</th>
+										</tr>
+
+									</table>
+					  			</div>
+					    	</div>
+					    	<!-- Detail -->				
+					    	<div id="detailZdravilo" class="col-lg-6 col-md-6 col-sm-6" style="visibility: hidden;">
+					    		<h4>Zdravilo <span id="imeZdravila">Aspirin<span id="zdravilaVir" class="gumb" style="float:right; font-size:14px;">[VIR] - več informacij... <span class="glyphicon glyphicon-globe"></span></span></h4>
+								<div class="panel panel-info">
+									<div class="panel-heading">
+										<h5>Povzetek<span id="toggleSummary" class="glyphicon glyphicon-chevron-up gumb" style="float:right;"></span></h5>
+									</div>
+									<div id="zdravilaSummary" class="panel-body">
+										....
+									</div>
+								</div>					    	
+					    	
+
+								<div class="panel panel-info">
+									<div class="panel-heading">
+										<h5>Kratek opis<span id="toggleDesc" class="glyphicon glyphicon-chevron-up gumb" style="float:right;"></span></h5>
+									</div>
+									<div id="zdravilaOpis" class="panel-body">
+										....
+									</div>
+								</div>					    	
+
+
+								<div class="panel panel-info">
+									<div class="panel-heading">
+										<h5>Stranski učinki<span id="toggleSideEffects" class="glyphicon glyphicon-chevron-up gumb" style="float:right;"></span></h5>
+									</div>
+									<div id="zdravilaStranskiUcinki" class="panel-body">
+										....
+									</div>
+								</div>					    	
+							</div> <!-- end of detail -->
+
+		 		  		</div>
 			  		</div>
 				</div>
+
 			</div>
 
 			<div class="row" style="height: 62px;"></div>

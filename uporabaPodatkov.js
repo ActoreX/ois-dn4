@@ -398,15 +398,63 @@ function krvniTlakIzpis(podatkiTelTlak)
 	}
 }
 
-function izpisiPodatkeZaZdravila(podatkiZdravil)
-{
-	  // url: "http://www.drugs.com/search.php?searchterm=aspirin",
-	d3.json("zdravila.json", function(json) {
+
+var podatkiZdravil = new Array();
+var jsonPodatki = null;
+
+function izpisiPodatkeZaZdravila(rows)
+{	
+	
+
+	for(var key in rows)
+	{
+		var imeZdravila = rows[key].zdravilo.value.value;
+		var zacetekZdrav = rows[key].zacetekZdrav.value.value;
+		var konecZdrav = rows[key].konecZdrav.value.value;
+
+		var smernice = rows[key].smernice.value.value;
+		var kolicinaDnevno = rows[key].kolicinaDnevno.items[0].value.magnitude;
+		var odgZdravnik = rows[key].Medication_instruction_other_participations.performer.name;
+		var navodilaZaUp = rows[key].Medication_instruction_narrative.value;
+
+		// console.log(imeZdravila);
+		// console.log(zacetekZdrav);
+		// console.log(konecZdrav);
+		// console.log(smernice);
+		// console.log(kolicinaDnevno);
+		// console.log(odgZdravnik);
+		// console.log(navodilaZaUp);
+
+		podatkiZdravil.push({"zdravilo":imeZdravila, "zacetek": zacetekZdrav, "konec":konecZdrav, "smernice": smernice, "kolicinaDnevno": kolicinaDnevno, "odgZdravnik": odgZdravnik, "navodilaZaUp":navodilaZaUp});
+	}
+
+	console.log(podatkiZdravil);
+
+	podatkiZdravil.sort(function(b,a){
+		if(a.zacetek < b.zacetek)
+			return -1;
+		else if(a.zacetek > b.zacetek)
+			return 1;
+		return 0;
+	});
+
+
+
+	for(key in podatkiZdravil)
+	{
+		$("#tabela_zdravil tr:last").after("<tr class=\"gumb\" id=" + key +"><td>" + podatkiZdravil[key]["zdravilo"] + "</td><td>" + podatkiZdravil[key]["odgZdravnik"] + "</td><td>" + podatkiZdravil[key]["smernice"] + "</td></tr>");
+	}
+
+
+	// url: "http://www.drugs.com/search.php?searchterm=aspirin",
+	d3.json("zdravila.json", function(json) {		
 		if(json==null)
-			alert("Error");
+			//alert("Error");
+		;
 		else 
 		{
 			console.log(json);
+			jsonPodatki = json;
 			alert("jupi jej");
 		}
 	});
@@ -417,6 +465,100 @@ function izpisiPodatkeZaZdravila(podatkiZdravil)
 $(document).ready(function(){
 	preberiPodatkeZaZdravila('365fc67b-a135-4c21-9175-808a4b7c912c');
 	preberiPodatkeZaVitalneZnake('365fc67b-a135-4c21-9175-808a4b7c912c');
+	var zdravilo;
+
+	$("#tabela_zdravil").click(function(target){
+
+		$("#tabela_zdravil").addClass("table-hover");
+		$(zdravilo).removeClass("alert-info");
+		$("#detailZdravilo").css("visibility", "hidden");
+
+
+		zdravilo = target.target.parentNode;
+
+		if(zdravilo.id) 
+		{	
+			$("#tabela_zdravil").removeClass("table-hover");
+			$(zdravilo).addClass("alert-info");
+
+			// podatke o izbranem zdravilu
+			$("#zdravilo_info").html("<span style=\"font-size: 12px;\">["+ podatkiZdravil[zdravilo.id]["zacetek"] +" - " + podatkiZdravil[zdravilo.id]["konec"] + "] - "+ podatkiZdravil[zdravilo.id]["navodilaZaUp"] +" - Količina dnevno: "+ podatkiZdravil[zdravilo.id]["kolicinaDnevno"] +"</span>");
+
+			if(jsonPodatki)
+			{
+				// vse je vredu (json podatki so se prenesli)
+				$("#zdravilaOpis").html(jsonPodatki[podatkiZdravil[zdravilo.id]["zdravilo"]].description);
+				$("#zdravilaStranskiUcinki").html(jsonPodatki[podatkiZdravil[zdravilo.id]["zdravilo"]].sideEffects);
+				$("#zdravilaSummary").html(jsonPodatki[podatkiZdravil[zdravilo.id]["zdravilo"]].summary);
+				$("#imeZdravila").html(podatkiZdravil[zdravilo.id]["zdravilo"]);
+				$("#detailZdravilo").css("visibility", "visible");
+
+			}
+
+
+		}
+	});
+
+	$("#toggleSideEffects").click(function(){
+		var jeVidno = $("#zdravilaStranskiUcinki.panel-body").is(":visible");
+
+		if(jeVidno)
+		{
+			$("#zdravilaStranskiUcinki.panel-body").slideUp(function(){
+				$("#toggleSideEffects").removeClass("glyphicon glyphicon-chevron-down gumb");
+				$("#toggleSideEffects").addClass("glyphicon glyphicon-chevron-down gumb");
+			});
+		} 
+		else 
+		{
+			$("#zdravilaStranskiUcinki.panel-body").slideDown(function(){
+				$("#toggleSideEffects").removeClass("glyphicon glyphicon-chevron-down gumb");
+				$("#toggleSideEffects").addClass("glyphicon glyphicon-chevron-down gumb");
+			});
+		}
+	});	
+
+	$("#toggleDesc").click(function(){
+		var jeVidno = $("#zdravilaOpis.panel-body").is(":visible");
+
+		if(jeVidno)
+		{
+			$("#zdravilaOpis.panel-body").slideUp(function(){
+				$("#toggleDesc").removeClass("glyphicon glyphicon-chevron-down gumb");
+				$("#toggleDesc").addClass("glyphicon glyphicon-chevron-down gumb");
+			});
+		} 
+		else 
+		{
+			$("#zdravilaOpis.panel-body").slideDown(function(){
+				$("#toggleDesc").removeClass("glyphicon glyphicon-chevron-down gumb");
+				$("#toggleDesc").addClass("glyphicon glyphicon-chevron-down gumb");
+			});
+		}
+	});	
+
+	$("#toggleSummary").click(function(){
+		var jeVidno = $("#zdravilaSummary.panel-body").is(":visible");
+
+		if(jeVidno)
+		{
+			$("#zdravilaSummary.panel-body").slideUp(function(){
+				$("#toggleSummary").removeClass("glyphicon glyphicon-chevron-down gumb");
+				$("#toggleSummary").addClass("glyphicon glyphicon-chevron-down gumb");
+			});
+		} 
+		else 
+		{
+			$("#zdravilaSummary.panel-body").slideDown(function(){
+				$("#toggleSummary").removeClass("glyphicon glyphicon-chevron-down gumb");
+				$("#toggleSummary").addClass("glyphicon glyphicon-chevron-down gumb");
+			});
+		}
+	});	
+
+	$("#zdravilaVir").click(function(){
+		window.location.href = "http://www.drugs.com/";
+	});
 
 
 	$( window ).resize(function() {
