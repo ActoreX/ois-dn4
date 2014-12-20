@@ -450,12 +450,11 @@ function izpisiPodatkeZaZdravila(rows)
 	d3.json("zdravila.json", function(json) {		
 		if(json==null)
 			//alert("Error");
-		;
+			;;
 		else 
 		{
 			console.log(json);
 			jsonPodatki = json;
-			alert("jupi jej");
 		}
 	});
 
@@ -490,7 +489,7 @@ $(document).ready(function(){
 				$("#zdravilaOpis").html(jsonPodatki[podatkiZdravil[zdravilo.id]["zdravilo"]].description);
 				$("#zdravilaStranskiUcinki").html(jsonPodatki[podatkiZdravil[zdravilo.id]["zdravilo"]].sideEffects);
 				$("#zdravilaSummary").html(jsonPodatki[podatkiZdravil[zdravilo.id]["zdravilo"]].summary);
-				$("#imeZdravila").html(podatkiZdravil[zdravilo.id]["zdravilo"]);
+				$("#imeZdravila").text(podatkiZdravil[zdravilo.id]["zdravilo"]);
 				$("#detailZdravilo").css("visibility", "visible");
 
 			}
