@@ -56,6 +56,7 @@ function preberiPodatkeZaZdravila(ehrId)
 	        {
 	        	var rows = res.resultSet;
 		        console.log(rows);
+		        izpisiPodatkeZaZdravila(rows);
 		        // for (var i in rows) {
 		        //     $("#result").append(rows[i].uid + ': ' + rows[i].name + ' (on ' +
 		        //                         rows[i].time.value + ")<br>");
@@ -83,6 +84,7 @@ function preberiPodatkeZaVitalneZnake(ehrId)
     "a/content[openEHR-EHR-OBSERVATION.body_temperature.v1]/data[at0002]/events[at0003]/data[at0001]/items[at0004] as telTempVr, "+
     "a/content[openEHR-EHR-OBSERVATION.body_temperature.v1]/data[at0002]/events[at0003]/time as telTempCas, "+
     "a/content[openEHR-EHR-OBSERVATION.blood_pressure.v1]/data[at0001]/events[at0006]/data[at0003] as telKrvniTlak, "+
+    "a/content[openEHR-EHR-OBSERVATION.blood_pressure.v1]/data[at0001]/events[at0006]/time as telKrvniTlakCas, " +
     "a/content[openEHR-EHR-OBSERVATION.height.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0004] as telVisinaVr, "+
     "a/content[openEHR-EHR-OBSERVATION.height.v1]/data[at0001]/events[at0002]/time as telVisinaCas, "+
     "a/content[openEHR-EHR-OBSERVATION.body_weight.v1]/data[at0002]/events[at0003]/data[at0001]/items[at0004] as telTezaVr, "+
@@ -126,6 +128,9 @@ function preberiPodatkeZaVitalneZnake(ehrId)
 function izlusciPodatkeVitalnihZnakov(rows)
 {
 	var podatkiTelVisina = new Array();
+	var podatkiTelTeza = new Array();
+	var podatkiTelTemp = new Array();
+	var podatkiTelTlak = new Array();
 
 	for(var key in rows)
 	{	
@@ -134,10 +139,33 @@ function izlusciPodatkeVitalnihZnakov(rows)
 		// visina v cm
 		var vrednostMeritveVisine = rows[key].telVisinaVr.value.magnitude;
 		
-		podatkiTelVisina.push({"cas": new Date(casMeritveVisine), "visina":vrednostMeritveVisine});
+		var casMeritveTeze = rows[key].telTezaCas.value;
+		var vrednostMeritveTeze = rows[key].telTezaVr.value.magnitude;
 
+		var casMeritveTemp = rows[key].telTempCas.value;
+		var vrednostMeritveTemp = rows[key].telTempVr.value.magnitude;
+
+		var vrednostMeritveSisTlaka = rows[key].telKrvniTlak.items[0].value.magnitude; // systol
+		var vrednostMeritveDiasTlaka = rows[key].telKrvniTlak.items[1].value.magnitude; // diastol
+		var casMeritveKrvnegaTlaka = rows[key].telKrvniTlakCas.value;
+
+
+
+		podatkiTelVisina.push({"cas": new Date(casMeritveVisine), "visina":vrednostMeritveVisine});
+		podatkiTelTeza.push({"cas": new Date(casMeritveTeze), "teza": vrednostMeritveTeze});
+		podatkiTelTemp.push({"cas": new Date(casMeritveTemp), "temp": vrednostMeritveTemp});
+		podatkiTelTlak.push({"cas": new Date(casMeritveKrvnegaTlaka), "sistolicni": vrednostMeritveSisTlaka, "diastolicni": vrednostMeritveDiasTlaka});
 	}
 
+	telesnaVisinaIzpis(podatkiTelVisina);
+	telesnaTezaIzpis(podatkiTelTeza);
+	telesnaTemperaturaIzpis(podatkiTelTemp);
+	krvniTlakIzpis(podatkiTelTlak);
+	
+}
+
+function telesnaVisinaIzpis(podatkiTelVisina)
+{
 	// sortirana po datumu (najstarejši - najnovejši)
 	podatkiTelVisina.sort(function(a,b){	
 		if(a.cas < b.cas)
@@ -237,12 +265,160 @@ function izlusciPodatkeVitalnihZnakov(rows)
     		$(this).css("fill", "steelblue");
     	});
 
+}
+
+function telesnaTemperaturaIzpis(podatkiTelTemp)
+{
+	// sortirana po datumu (najstarejši - najnovejši)
+	podatkiTelTemp.sort(function(a,b){	
+		if(a.cas < b.cas)
+			return -1;
+		else if(a.cas > b.cas)
+			return 1;
+		return 0;	
+	});
+
+	// Graf za predstavitev telesne temperature, višine in krvnega pritiska.
+
+	var margin = {
+		top: 20,
+		right: 20, 
+		bottom: 86,
+		left: 80
+	},
+		width = 600 - margin.left - margin.right,
+		height = width - margin.top - margin.bottom;
+
+	var x = d3.scale.ordinal()
+		.rangeRoundBands([0, width], .06);
+
+	var y = d3.scale.linear()
+		.rangeRound([height, 0]);
+
+	var color = d3.scale.ordinal()
+		.range(["#308fef", "5fa9f3", "1176db"]);
+
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom")
+		.tickFormat(d3.time.format("%Y-%m-%d"));
+
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left")
+		.ticks(10);
+
+	var svg = d3.select("#temp").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+	x.domain(podatkiTelTemp.map(function(d){
+		return d.cas;
+	}));	
+
+	y.domain([d3.min(podatkiTelTemp, function(d){return d.temp}), d3.max(podatkiTelTemp, function(d){
+		return d.temp;
+	})]);
+
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis)
+	.selectAll("text")
+		.style("text-anchor", "end")
+		.attr("dx", "0.60em")
+		.attr("dy", "0.80em")
+		.attr("transform", "rotate(-45)" )
+	.append("text")
+		.attr("dy", "-.82em")
+      	.style("text-anchor", "end");
+
+	svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis)
+	.append("text")
+      	.attr("dy", "-.82em")
+      	.style("text-anchor", "end")
+      	.text("Temperatura (°C)");
+
+
+    var temp_info = $("#temp_info");
+
+    svg.selectAll("bar")
+    	.data(podatkiTelTemp)
+    .enter().append("rect")
+    	.style("fill", "steelblue")
+    	.style("opacity", .8)
+    	.attr("x", function(d) { return x(d.cas); })
+    	.attr("width", x.rangeBand())
+    	.attr("y", function(d) {return y(d.temp); })
+    	.attr("height", function(d) { return height - y(d.temp); })
+
+    	.on("mouseover", function(d){
+    		temp_info.css("visibility", "visible");
+    		temp_info.html("<small style='color:green; font-style:italic;'>" + d.cas + " </small>&nbsp;&nbsp;&nbsp;&nbsp;" + d.temp + "°C");
+    		$(this).css("fill", "green");
+
+
+    	})
+    	.on("mouseout", function(d){
+    		temp_info.css("visibility", "hidden");
+    		$(this).css("fill", "steelblue");
+    	});
 
 }
 
+function telesnaTezaIzpis(podatkiTelTeza)
+{
+	podatkiTelTeza.sort(function(a,b){	
+		if(a.cas < b.cas)
+			return -1;
+		else if(a.cas > b.cas)
+			return 1;
+		return 0;	
+	});
+
+	for(var key in podatkiTelTeza)
+	{
+		$("#tabela_telTez tr:last").after("<tr><td>" + podatkiTelTeza[key]["cas"] + "</td><td>" + podatkiTelTeza[key]["teza"] + "</td><tr>");
+	}
+}
+
+
+function krvniTlakIzpis(podatkiTelTlak)
+{
+	for(key in podatkiTelTlak)
+	{
+		$("#tabela_krvniTlak tr:last").after("<tr><td>" + podatkiTelTlak[key]["cas"] + "</td><td>" + podatkiTelTlak[key]["sistolicni"] + "</td><td>" + podatkiTelTlak[key]["diastolicni"] + "</td></tr>");
+
+	}
+}
+
+function izpisiPodatkeZaZdravila(podatkiZdravil)
+{
+	  // url: "http://www.drugs.com/search.php?searchterm=aspirin",
+	d3.json("zdravila.json", function(json) {
+		if(json==null)
+			alert("Error");
+		else 
+		{
+			console.log(json);
+			alert("jupi jej");
+		}
+	});
+
+	
+}
 
 $(document).ready(function(){
+	preberiPodatkeZaZdravila('365fc67b-a135-4c21-9175-808a4b7c912c');
 	preberiPodatkeZaVitalneZnake('365fc67b-a135-4c21-9175-808a4b7c912c');
+
+
 	$( window ).resize(function() {
 
 	});	

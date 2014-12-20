@@ -100,24 +100,42 @@
 				<div class="col-lg-6 col-md-6 col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h4>Teža</h4>
+							<h4>
+								<span>Teža</span>
+								<span class=></span>
+							</h4>
 						</div>
 						<div class="panel-body">
-					    	Basic panel example
+							
+							<div class="table-responsive">
+								<table id="tabela_telTez" class="table table-hover">
+									<tr>
+										<th><span class="glyphicon glyphicon-dashboard"></span> Datum mertive:</th>
+										<th><span class="glyphicon glyphicon-import"></span> Meritev [kg]:</th>
+									</tr>
+
+								</table>
+				  			</div>
+
 				  		</div>
 			  		</div>
 				</div>
-			</div>
+				</div>
+
 
 			<!-- druga vrstica -->
 			<div class="row">
 				<div class="col-lg-6 col-md-6 col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h4>Telesna temperatura</h4>
+							<h4>
+								<span>Telesna temperatura</span>
+								<span id="temp_info" style="float:right; visibility: hidden;">asd</span>
+							</h4>
 						</div>
-						<div class="panel-body">
-					    	Basic panel example
+						<div id="temp" class="panel-body">
+
+
 				  		</div>
 			  		</div>
 				</div>
@@ -127,7 +145,13 @@
 							<h4>Krvni tlak</h4>
 						</div>
 						<div class="panel-body">
-					    	Basic panel example
+							<table id="tabela_krvniTlak" class="table table-hover">
+								<tr>
+									<th><span class="glyphicon glyphicon-dashboard"></span> Datum mertive:</th>
+									<th><span class="glyphicon glyphicon-export"></span> Sistolični tlak: [mm/Hg]:</th>
+									<th><span class="glyphicon glyphicon-import"></span> Diastolični tlak: [mm/Hg]:</th>
+								</tr>
+							</table>
 				  		</div>
 			  		</div>
 				</div>
