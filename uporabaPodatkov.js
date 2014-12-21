@@ -330,7 +330,7 @@ function obdelajObvestila(podatkiZadnjihMeritev)
 		if(telesnaTemp >= 42.8)
 			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno! Ste v smrtni nevarnosti!</strong> Glede na zadnje meritve je Vaša telesna temperatura nadpovprečno visoka - "+ telesnaTemp +"°C - nemudoma ukrepajte!</div>");
 		else
-			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno/strong> Glede na zadnje meritve je Vaša telesna temperatura nadpovprečno visoka : "+ telesnaTemp +"°C - če se stanje v naslednjih urah poslabša, poiščite strokovno pomoč.</div> ");
+			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno! </strong> Glede na zadnje meritve je Vaša telesna temperatura nadpovprečno visoka : "+ telesnaTemp +"°C - če se stanje v naslednjih urah poslabša, poiščite strokovno pomoč.</div> ");
 
 	} else if(telesnaTemp <35.8)
 	{
@@ -510,9 +510,9 @@ function telesnaTemperaturaIzpis(podatkiTelTemp)
 		return d.cas;
 	}));	
 
-	y.domain([d3.min(podatkiTelTemp, function(d){return d.temp}), d3.max(podatkiTelTemp, function(d){
+	y.domain([0, d3.max(podatkiTelTemp, function(d){
 		return d.temp;
-	})]);
+	})+3]);
 
 	svg.append("g")
 		.attr("class", "x axis")

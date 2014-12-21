@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-
+		<script type="text/javascript" src="generirajMKC.js"></script>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="stylesheet/glavnistil.css">
 	</head>
@@ -49,6 +49,7 @@
 				</div>
 			</div>
 
+			
 
 			<!-- prva vrstica -->
 			<div class="row">
@@ -57,8 +58,9 @@
 						
 						<div class="panel-heading">
 							<h4>
-								<span>Korak 1</span>
-								<span id="korak1" style="float:right; visibility: hidden;">asd</span></h4>
+								<span>Korak 1</span><button id="korak1" style="float:right;" class="btn btn-primary">Generiraj EHR zapise</button>
+							</h4>
+							
 						</div>
 						<div class="panel-body">
 							V "geneirajUporabnike.js" se najprej zažene funkcija "kreirajEhrZaBolnike().done(izpisiKreiraneEhrId);", ki vsebuje (spodnjo) funkcionalnost; po uspešni izvedbi(kreiranju ehrId) se nam v konzolo izpišejo ehrId uporabnikov. <br>
@@ -91,13 +93,29 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4>
-								<span>Korak 2</span>
-								<span class=></span>
+								<span>Korak 2</span><button id="korak2" style="float:right; visibility:hidden;:0;" class="btn btn-primary">Vnesi zapise podatkov!</button>
 							</h4>
+
 						</div>
 						<div class="panel-body">
 							Sledi vnos podatkov za določenega bolnika. Za lažji vnos se lahko pokliče metoda "dodajZapiseBolnikovRandom", ki pravzaprav
 							napolni/zapiše psevdo-naključne meritve za posameznega bolnika. Podatki niso nujno veljavni - kar pomeni da pri naključnem generiranju niso upoštevane pretekle meritve in lahko pride do nerealnih vnosov, kot npr. da je na isti dan izmerjena drugačna telesna višina, da je višina v preteklosti večja od višine sedaj, ipd. Glavni namen je, prikazati podatke vitalnih znakov in zdravil. Pri zdravilih je uporabljen vzorec master-detail, kjer lahko izberemo določeno zdravilo, o katerem nam izpiše nekaj uporabnih informacij. Tudi za temperaturo in težo so prikazani bolj podrobni podatki meritev (za izbran stoplec, ki se takrat obarva zeleno).
+						</div>
+			  		</div>
+				</div>	
+
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4>
+								<span>Korak 3</span>
+							</h4>
+
+						</div>
+						<div class="panel-body">
+							<div id="generatorObvestila" style="visibility:hidden;">
+
+							</div>
 						</div>
 			  		</div>
 				</div>
