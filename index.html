@@ -42,9 +42,9 @@
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Izberi uporabnika <span class="caret"></span></a>
 		          <ul class="dropdown-menu" role="menu">
-		            <li><a href="#Margaret">Margaret</a></li>            
+		            <li><a href="#Chuck">Chuck</a></li>
 		            <li><a href="#Keny">Keny</a></li>	
-		   			<li><a href="#Chuck">Chuck</a></li>
+		            <li><a href="#Margaret">Margaret</a></li>            
 		          </ul>
 		        </li>
 
@@ -86,7 +86,7 @@
 
 			<!-- prva vrstica -->
 			<div class="row">
-				<div class="col-lg-6 col-md-6 col-sm-12">
+				<div class="col-lg-6 col-md-6 col-sm-12" style="max-height: 700px; overflow-y: auto;">
 					<div class="panel panel-default">
 						
 						<div class="panel-heading">
@@ -95,13 +95,13 @@
 								<span id="visina_info" style="float:right; visibility: hidden;">asd</span></h4>
 						</div>
 						<div class="panel-body">
-					    	<div id="visina">
+					    	<div id="visina" style="overflow-x: auto;">
 					    	</div>
 				  		</div>
 			  		</div>
 				</div>
 				<div class="col-lg-6 col-md-6 col-sm-12">
-					<div class="panel panel-default">
+					<div class="panel panel-default" style="max-height: 700px; overflow-y: auto;">
 						<div class="panel-heading">
 							<h4>
 								<span>Teža</span>
@@ -136,7 +136,7 @@
 								<span id="temp_info" style="float:right; visibility: hidden;">asd</span>
 							</h4>
 						</div>
-						<div id="temp" class="panel-body">
+						<div id="temp" class="panel-body" style="max-height: 700px; overflow-y: auto;">
 
 
 				  		</div>
@@ -147,7 +147,7 @@
 						<div class="panel-heading">
 							<h4>Krvni tlak</h4>
 						</div>
-						<div class="panel-body">
+						<div class="panel-body" style="max-height: 700px; overflow-y: auto;">
 							<table id="tabela_krvniTlak" class="table table-hover">
 								<tr>
 									<th><span class="glyphicon glyphicon-dashboard"></span> Datum mertive:</th>

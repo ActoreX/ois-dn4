@@ -651,7 +651,7 @@ $(document).ready(function(){
 
 	var url = window.location.href; 
 	var indexOfHash = url.indexOf("#");
-	var hash = "#Margaret";
+	var hash = "#Chuck";
 	
 
 	if(indexOfHash != -1)
@@ -667,26 +667,26 @@ $(document).ready(function(){
 
 	switch(hash)
 	{
-		case "#Margaret": 
-			ehrId = margaretEhrId;
-			break;
+		case "#Chuck": 
+			ehrId = chuckEhrId; 
+		break;
 
 		case "#Keny": 
 			ehrId = kenyEhrId;
 		break;
 
-		case "#Chuck": 
-			ehrId = chuckEhrId; 
-		break;
+		case "#Margaret": 
+			ehrId = margaretEhrId;
+			break;
 
 		default: 
 			hash = hash.substring(1); // da se znebimo #
 			
-			// preveri hash ehrId (če obstaja ga nastavi), drugače nastavi od margaret
+			// preveri hash ehrId (če obstaja ga nastavi), drugače nastavi od Chuck
 			if(preveriEhrId(hash) == true)
 				ehrId = hash;
 			else
-				ehrId = margaretEhrId; // default ehrId
+				ehrId = chuckEhrId; // default ehrId
 
 	}
 
