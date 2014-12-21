@@ -147,8 +147,8 @@ function kreirajEhrZaBolnike()
 
 }
 
-
-
+// posplošen generator podatkov (lahko so neveljavni, npr. višina je enkrat večja, drugič manjša, ipd...)
+// namen, zgolj generiraje podatkov, ki jih lahko kasneje prikažemo.
 function generirajPodatkeRandom(ehrId)
 {	
 	var sessionId = getSessionId();
@@ -284,19 +284,19 @@ function dodajZapiseBolnikovRandom()
 
 	while(i!=0)
 	{
-		generirajPodatke(margaretEhrId);
+		generirajPodatkeRandom(margaretEhrId);
 		i--;
 	}
 
 	while(j!=0)
 	{
-		generirajPodatke(kenyEhrId);
+		generirajPodatkeRandom(kenyEhrId);
 		j--;
 	}
 
 	while(k!=0)
 	{
-		generirajPodatke(chuckEhrId);
+		generirajPodatkeRandom(chuckEhrId);
 		k--;
 	}
 
@@ -341,6 +341,6 @@ $(document).ready(function(){
 	// 365fc67b-a135-4c21-9175-808a4b7c912c      3
 
 	
-	// dodajZapiseBolnikov();
+	// dodajZapiseBolnikovRandom();
 	
 });

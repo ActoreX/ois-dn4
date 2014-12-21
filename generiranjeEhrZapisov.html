@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>eZdravko - Preventiva</title>
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="stylesheet/glavnistil.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-default" role="navigation">
+		  <div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" href="./" title="eZdravko - Preventiva">eZdravko	</a>
+		    </div>
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">	
+		        
+		        <li><a href="ideja.html">Ideja <span class="sr-only">(current)</span></a></li>
+		        
+		        <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Generator 	<span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="#" class="active">Generiranje</a></li>    <!-- TODO izpis ehrIdjev kreiranih uporabnikov -->         
+		          </ul>
+		        </li>
+
+		      </ul> <!-- navbar-nav -->
+		    </div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>
+
+		<div id="content">
+			<!-- naslov strani -->
+			<div class="row">	
+				<div class="page-header">	
+					<h2>eZdravko pomočnik</h2>
+				</div>
+			</div>
+
+
+			<!-- prva vrstica -->
+			<div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<div class="panel panel-default">
+						
+						<div class="panel-heading">
+							<h4>
+								<span>Korak 1</span>
+								<span id="korak1" style="float:right; visibility: hidden;">asd</span></h4>
+						</div>
+						<div class="panel-body">
+							V "geneirajUporabnike.js" se najprej zažene funkcija "kreirajEhrZaBolnike().done(izpisiKreiraneEhrId);", ki vsebuje (spodnjo) funkcionalnost; po uspešni izvedbi(kreiranju ehrId) se nam v konzolo izpišejo ehrId uporabnikov. <br>
+							Slednje lahko spremenimo na vrstici 18,19 in 20: <br>
+							var margaretEhrId = "novEhrId1";<br>
+							var kenyEhrId = "novEhrId2";<br>
+							var chuckEhrId = "novEhrId3";<br>
+							  <br><br>
+						    <code> 
+						    <p>function kreirajEhrZaBolnike()<br />{ <br />var r = $.Deferred();</p>
+							<p>sessionId = getSessionId();</p>
+							<p><br />$.ajaxSetup({<br /> headers: {<br /> "Ehr-Session": sessionId<br /> }<br />});</p>
+							<p>// Margaret - bolnik 1<br />$.ajax({<br /> url: baseUrl + "/ehr",<br /> type: 'POST',<br /> <br /> success: function (data) {<br /> var ehrId = data.ehrId;<br /> var partyData = {<br /> firstNames: "Margaret",<br /> lastNames: "Tuu",<br /> dateOfBirth: "1972-7-18T19:20",<br /> partyAdditionalInfo: [{key: "ehrId", value: ehrId},]<br /> };</p>
+							<p>$.ajax({<br /> url: baseUrl + "/demographics/party",<br /> type: 'POST',<br /> contentType: 'application/json',<br /> data: JSON.stringify(partyData),<br /> success: function (party) {<br /> if (party.action == 'CREATE') {<br /> margaretEhrId = ehrId;<br /> console.log(margaretEhrId);<br /> }<br /> },<br /> <br /> error: function(err) {<br /> console.log("napaka!!! ehr bolnika ni bilo mogoče ustvariti! " + JSON.parse(err.responseText).userMessage);<br /> }</p>
+							<p><br /> });<br /> }<br />});</p>
+							<p>// Keny - bolnik 2<br />$.ajax({<br /> url: baseUrl + "/ehr",<br /> type: 'POST',<br /> <br /> success: function (data) {<br /> var ehrId = data.ehrId;<br /> var partyData = {<br /> firstNames: "Keny",<br /> lastNames: "Wuu",<br /> dateOfBirth: "2010-4-11T19:11",<br /> partyAdditionalInfo: [{key: "ehrId", value: ehrId},]<br /> };</p>
+							<p>$.ajax({<br /> url: baseUrl + "/demographics/party",<br /> type: 'POST',<br /> contentType: 'application/json',<br /> data: JSON.stringify(partyData),<br /> success: function (party) {<br /> if (party.action == 'CREATE') {<br /> kenyEhrId = ehrId;<br /> console.log(kenyEhrId);<br /> }<br /> },<br /> <br /> error: function(err) {<br /> console.log("napaka!!! ehr bolnika ni bilo mogoče ustvariti! " + JSON.parse(err.responseText).userMessage);<br /> }</p>
+							<p><br /> });<br /> }<br />});</p>
+							<p>// Chuck - bolnik 3<br />$.ajax({<br /> url: baseUrl + "/ehr",<br /> type: 'POST',<br /> <br /> success: function (data) {<br /> var ehrId = data.ehrId;<br /> var partyData = {<br /> firstNames: "Chuck",<br /> lastNames: "Noris",<br /> dateOfBirth: "1982-7-12T19:10",<br /> partyAdditionalInfo: [{key: "ehrId", value: ehrId},]<br /> };</p>
+							<p>$.ajax({<br /> url: baseUrl + "/demographics/party",<br /> type: 'POST',<br /> contentType: 'application/json',<br /> data: JSON.stringify(partyData),<br /> success: function (party) {<br /> if (party.action == 'CREATE') {<br /> chuckEhrId = ehrId;<br /> console.log(chuckEhrId);<br /> }<br /> },<br /> <br /> error: function(err) {<br /> console.log("napaka!!! ehr bolnika ni bilo mogoče ustvariti! " + JSON.parse(err.responseText).userMessage);<br /> }</p>
+							<p><br /> });<br /> }<br />});</p>
+							<p>setTimeout(function (){<br />// and call `resolve` on the deferred object, once you're done<br /> r.resolve();<br />}, 3000);</p>
+							<p>// return the deferred object<br />return r;</p>
+							<p>}</p>
+						    </code>
+				  		</div>
+			  		</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4>
+								<span>Korak 2</span>
+								<span class=></span>
+							</h4>
+						</div>
+						<div class="panel-body">
+							Sledi vnos podatkov za določenega bolnika. Za lažji vnos se lahko pokliče metoda "dodajZapiseBolnikovRandom", ki pravzaprav
+							napolni/zapiše psevdo-naključne meritve za posameznega bolnika. Podatki niso nujno veljavni - kar pomeni da pri naključnem generiranju niso upoštevane pretekle meritve in lahko pride do nerealnih vnosov, kot npr. da je na isti dan izmerjena drugačna telesna višina, da je višina v preteklosti večja od višine sedaj, ipd. Glavni namen je, prikazati podatke vitalnih znakov in zdravil. Pri zdravilih je uporabljen vzorec master-detail, kjer lahko izberemo določeno zdravilo, o katerem nam izpiše nekaj uporabnih informacij. Tudi za temperaturo in težo so prikazani bolj podrobni podatki meritev (za izbran stoplec, ki se takrat obarva zeleno).
+						</div>
+			  		</div>
+				</div>
+				</div>
+
+
+	
+
+			<div class="row" style="height: 62px;"></div>
+			<!-- page footer -->
+			<div class="row text-center" >
+				Copyright - All right reserved.
+			</div>
+
+
+		</div>
+
+	</body>
+</html>
