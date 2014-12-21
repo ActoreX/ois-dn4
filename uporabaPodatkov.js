@@ -14,6 +14,81 @@ function getSessionId() {
     return response.responseJSON.sessionId;
 }
 
+function preberiPodatkeUporabnika(ehrId)
+{
+	var sessionId = getSessionId();
+	
+	$.ajaxSetup({
+	    headers: {
+	        "Ehr-Session": sessionId
+	    }
+	});
+
+	var searchData = [
+	    {key: "ehrId", value: ehrId}
+	];
+
+	$.ajax({
+	    url: baseUrl + "/demographics/party/query",
+	    type: 'POST',
+	    contentType: 'application/json',
+	    data: JSON.stringify(searchData),
+	    success: function (res) {
+	    	if(res != null)
+		        for (i in res.parties) {
+		            var party = res.parties[i];
+		            $("#ime").text(party.firstNames);
+		            $("#priimek").text(party.lastNames);
+		            $("#ehrId").text(ehrId); 
+		        }
+		    else
+		    {
+		    	console.log("EhrId ni veljaven"); // čeprav do tega naj nebi prišlo (za to smo poskrbeli pred klicem funckije)
+		    }
+	    },
+	    error: function(err){
+	    	console.log(JSON.parse(err.responseText).userMessage);
+	    }
+	});
+}
+
+// za preverjanje ehrId (async false), drugače podobno kot pri preberiPodatkeUporabnika
+function preveriEhrId(ehrId)
+{
+	var sessionId = getSessionId();
+	
+	var ehrExist = false;
+	$.ajaxSetup({
+	    headers: {
+	        "Ehr-Session": sessionId
+	    },
+	    async: false
+	});
+
+	var searchData = [
+	    {key: "ehrId", value: ehrId}
+	];
+
+	$.ajax({
+	    url: baseUrl + "/demographics/party/query",
+	    type: 'POST',
+	    async: false,
+	    contentType: 'application/json',
+	    data: JSON.stringify(searchData),
+	    success: function (res) {
+	    	if(res!=null)
+	    		ehrExist = true;
+
+	    },
+	    error: function(err){
+	    	console.log(JSON.parse(err.responseText).userMessage);
+
+	    }
+	});
+
+	return ehrExist;
+}
+
 function preberiPodatkeZaZdravila(ehrId)
 {
 	var sessionId = getSessionId();	
@@ -96,7 +171,7 @@ function preberiPodatkeZaVitalneZnake(ehrId)
 	"contains COMPOSITION a[openEHR-EHR-COMPOSITION.encounter.v1] "+
 	"where "+
 	    "a/name/value='Vital Signs' and "+
-	    "e/ehr_id/value='365fc67b-a135-4c21-9175-808a4b7c912c' "+
+	    "e/ehr_id/value='"+ ehrId +"' "+
 	"offset 0 limit 100";	
 
 	console.log(aql);
@@ -569,8 +644,55 @@ function izpisiPodatkeZaZdravila(rows)
 }
 
 $(document).ready(function(){
-	preberiPodatkeZaZdravila('365fc67b-a135-4c21-9175-808a4b7c912c');
-	preberiPodatkeZaVitalneZnake('365fc67b-a135-4c21-9175-808a4b7c912c');
+	var margaretEhrId = "07d1af0c-607f-42bc-bdbe-a76a8bcf615a";
+	var kenyEhrId = "d31a383a-67c2-4efb-a32f-ae161ef64eae";
+	var chuckEhrId = "365fc67b-a135-4c21-9175-808a4b7c912c";
+	var ehrId;
+
+	var url = window.location.href; 
+	var indexOfHash = url.indexOf("#");
+	var hash = "#Margaret";
+	
+
+	if(indexOfHash != -1)
+	{
+		hash = url.substring(indexOfHash);
+	}
+
+
+	$(window).on('hashchange', function(e){
+		location.reload();
+	});
+
+
+	switch(hash)
+	{
+		case "#Margaret": 
+			ehrId = margaretEhrId;
+			break;
+
+		case "#Keny": 
+			ehrId = kenyEhrId;
+		break;
+
+		case "#Chuck": 
+			ehrId = chuckEhrId; 
+		break;
+
+		default: 
+			hash = hash.substring(1); // da se znebimo #
+			
+			// preveri hash ehrId (če obstaja ga nastavi), drugače nastavi od margaret
+			if(preveriEhrId(hash) == true)
+				ehrId = hash;
+			else
+				ehrId = margaretEhrId; // default ehrId
+
+	}
+
+	preberiPodatkeUporabnika(ehrId);
+	preberiPodatkeZaZdravila(ehrId);
+	preberiPodatkeZaVitalneZnake(ehrId);
 	var zdravilo;
 
 	$("#tabela_zdravil").click(function(target){
@@ -662,12 +784,16 @@ $(document).ready(function(){
 				$("#toggleSummary").addClass("glyphicon glyphicon-chevron-down gumb");
 			});
 		}
-	});	
+	});
 
 	$("#zdravilaVir").click(function(){
 		window.location.href = "http://www.drugs.com/";
 	});
 
+	$("#vnosEhrId").click(function(){
+		var ehrVnos = $("#ehrIdVsebina").val();
+		window.location.href = "#" + ehrVnos;
+	})
 
 	$( window ).resize(function() {
 
