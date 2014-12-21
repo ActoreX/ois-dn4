@@ -157,15 +157,6 @@ function izlusciPodatkeVitalnihZnakov(rows)
 		podatkiTelTlak.push({"cas": new Date(casMeritveKrvnegaTlaka), "sistolicni": vrednostMeritveSisTlaka, "diastolicni": vrednostMeritveDiasTlaka});
 	}
 
-	telesnaVisinaIzpis(podatkiTelVisina);
-	telesnaTezaIzpis(podatkiTelTeza);
-	telesnaTemperaturaIzpis(podatkiTelTemp);
-	krvniTlakIzpis(podatkiTelTlak);
-	
-}
-
-function telesnaVisinaIzpis(podatkiTelVisina)
-{
 	// sortirana po datumu (najstarejši - najnovejši)
 	podatkiTelVisina.sort(function(a,b){	
 		if(a.cas < b.cas)
@@ -175,6 +166,139 @@ function telesnaVisinaIzpis(podatkiTelVisina)
 		return 0;	
 	});
 
+	// sortirana po datumu (najstarejši - najnovejši)
+	podatkiTelTemp.sort(function(a,b){	
+		if(a.cas < b.cas)
+			return -1;
+		else if(a.cas > b.cas)
+			return 1;
+		return 0;	
+	});
+
+	podatkiTelTeza.sort(function(b,a){	
+		if(a.cas < b.cas)
+			return -1;
+		else if(a.cas > b.cas)
+			return 1;
+		return 0;	
+	});
+
+	podatkiTelTlak.sort(function(b,a){	
+		if(a.cas < b.cas)
+			return -1;
+		else if(a.cas > b.cas)
+			return 1;
+		return 0;	
+	});
+
+	var zadnjaMeritevTeza = podatkiTelTeza[0];
+	var zadnjaMeritevVisina = podatkiTelVisina[podatkiTelVisina.length-1];
+	var zadnjaMeritevTlak  = podatkiTelTlak[0];
+	var zadnjaMeritevTemperatura  = podatkiTelTemp[podatkiTelTemp.length-1];
+
+	obdelajObvestila({"teza":zadnjaMeritevTeza, "visina":zadnjaMeritevVisina, "tlak": zadnjaMeritevTlak, "temp":zadnjaMeritevTemperatura});
+
+	telesnaVisinaIzpis(podatkiTelVisina);
+	telesnaTezaIzpis(podatkiTelTeza);
+	telesnaTemperaturaIzpis(podatkiTelTemp);
+	krvniTlakIzpis(podatkiTelTlak);
+	
+}
+
+function obdelajObvestila(podatkiZadnjihMeritev)
+{
+	console.log(podatkiZadnjihMeritev["teza"].teza);
+	console.log(podatkiZadnjihMeritev["visina"].visina);
+	console.log(podatkiZadnjihMeritev["tlak"]);
+	console.log(podatkiZadnjihMeritev["temp"]);
+
+
+	// posplošen izračun ITM za odrasle osebe, Ž.sp
+
+	// ITM = [telesna teža v kg] : [telesna višina x telesna višina v m]
+	var indeksTelesneMase =  Math.round(podatkiZadnjihMeritev["teza"].teza/(podatkiZadnjihMeritev["visina"].visina/100*podatkiZadnjihMeritev["visina"].visina/100)*100)/100;
+	
+	// pod 18.5	prenizka telesna teža
+	// 18.5 - 24.9	normalna telesna teža
+	// 25 - 29.9	prekomerna telesna teža
+	// nad 30	debelost
+	if(indeksTelesneMase < 18.5)
+	{
+		$("#obvestila").append("<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno!</strong> Glede na zadnje meritve je Vaš indeks telesne mase je nadpovprečno nizek - "+ indeksTelesneMase +" - podhranjenost. Obiščite osebnega zdravnika oziroma si poiščite strokovno pomoč!</div>");
+	} else if (indeksTelesneMase <=24.9)
+	{
+		$("#obvestila").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Odlično!</strong> Glede na zadnje meritve je Vaš indeks telesne mase je na normalnem nivoju - "+ indeksTelesneMase +" - še tako naprej, in ne pozabite na rekreacijo!</div>");
+	} else if(indeksTelesneMase > 24.9)
+	{
+		if(indeksTelesneMase < 30)
+			$("#obvestila").append("<div class=\"alert alert-info alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Pozor!</strong> Glede na zadnje meritve je Vaš indeks telesne mase je nadpovprečno visok - "+ indeksTelesneMase +" - debelost prve stopnje. Izogibajte se sladkarijam in sladkim pijačam, ukvarjajte se s športom!</div>");
+		else if(indeksTelesneMase < 40)
+			$("#obvestila").append("<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nevarno!</strong> Glede na zadnje meritve je Vaš indeks telesne mase je nadpovprečno visok - "+ indeksTelesneMase +" - debelosti druge stopnje. Obiščite osebnega zdravnika.</div>");				
+		else
+			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno!</strong> Glede na zadnje meritve je Vaš indeks telesne mase je nadpovprečno visok - "+ indeksTelesneMase +" - debelosti tretje stopnje. Obiščite osebnega zdravnika.</div>");
+	}
+
+	var telesnaTemp = podatkiZadnjihMeritev["temp"].temp;
+	//  35,8 in 37,2 °C normalno
+	// Temperatura nad 40 °C je lahko že smrtno nevarna. 
+	// Zgornja meja preživetja znaša 42,8 °C, spodnja pa 27 °C.
+
+	if(telesnaTemp >= 35.8 && telesnaTemp <= 37.2)
+	{
+		$("#obvestila").append("<div class=\"alert alert-info alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>OK!</strong> Glede na zadnje meritve je Vaša telesna temperatura normalna/običajna : "+ telesnaTemp +"°C</div>");
+
+	} else if(telesnaTemp > 37.2 && telesnaTemp < 40)
+	{	
+		$("#obvestila").append("<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Pozor!</strong> Glede na zadnje meritve je Vaša telesna temperatura malo nad nivojem : "+ telesnaTemp +"°C - če se stanje v naslednjih nekaj urah poslabša, obiščite zdravnika.</div>");
+	} else if(telesnaTemp >= 40)
+	{	
+		if(telesnaTemp >= 42.8)
+			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno! Ste v smrtni nevarnosti!</strong> Glede na zadnje meritve je Vaša telesna temperatura nadpovprečno visoka - "+ telesnaTemp +"°C - nemudoma ukrepajte!</div>");
+		else
+			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno/strong> Glede na zadnje meritve je Vaša telesna temperatura nadpovprečno visoka : "+ telesnaTemp +"°C - če se stanje v naslednjih urah poslabša, poiščite strokovno pomoč.</div> ");
+
+	} else if(telesnaTemp <35.8)
+	{
+		if(telesnaTemp <= 27)
+			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno! Ste v smrtni nevarnosti!</strong> Glede na zadnje meritve je Vaša telesna temperatura nadpovprečno nizka - "+ telesnaTemp +"°C (podhladitev) - nemudoma ukrepajte!</div>");
+		else
+			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno! </strong> Glede na zadnje meritve je Vaša telesna temperatura nenavadno nizka : "+ telesnaTemp +"°C - če se stanje v naslednjih urah poslabša, poiščite strokovno pomoč.</div>");
+
+	}
+
+	var sistolicni = podatkiZadnjihMeritev["tlak"].sistolicni;
+	var diastolicni = podatkiZadnjihMeritev["tlak"].diastolicni;
+	var okSis = false, okDias = false;
+	// sistolicni: normalno 110–140 mmHg
+	// diastolicni: normalno med 60–90 mmHg
+
+	if(sistolicni >= 100 && sistolicni <= 140 )
+	{
+		okSis = true;
+	}
+
+	if(diastolicni >=60 && diastolicni <=90)
+	{
+		okDias = true;
+	}
+
+	if(okSis && okDias)
+	{
+		$("#obvestila").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>OK! </strong> Glede na zadnje meritve je Vaš krvni tlak normalen : ("+ sistolicni +"," + diastolicni + ") (sistolicni,diastolicni)[mmHg].</div>");	
+	}
+	else
+	{
+		if(!okSis && !okDias)
+			$("#obvestila").append("<div class=\"alert alert-danger alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Nujno! </strong> Glede na zadnje meritve Vaš izmerjen krvni tlak odstopa od pričakovanih vrednosti : ("+ sistolicni +"," + diastolicni + ") (sistolicni,diastolicni)[mmHg]. Nemudoma poiščite zdravniško pomoč!</div>");
+		else
+			$("#obvestila").append("<div class=\"alert alert-warning alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button><strong>Pozor! </strong> Glede na zadnje meritve Vaš krvni tlak rahlo odstopa od pričakovanih vrednosti : ("+ sistolicni +"," + diastolicni + ") (sistolicni,diastolicni)[mmHg]. Posvetujte se z osebnim zdravnikom.</div>");	
+	}
+
+
+}
+
+function telesnaVisinaIzpis(podatkiTelVisina)
+{
 	// Graf za predstavitev telesne temperature, višine in krvnega pritiska.
 
 	var margin = {
@@ -269,15 +393,6 @@ function telesnaVisinaIzpis(podatkiTelVisina)
 
 function telesnaTemperaturaIzpis(podatkiTelTemp)
 {
-	// sortirana po datumu (najstarejši - najnovejši)
-	podatkiTelTemp.sort(function(a,b){	
-		if(a.cas < b.cas)
-			return -1;
-		else if(a.cas > b.cas)
-			return 1;
-		return 0;	
-	});
-
 	// Graf za predstavitev telesne temperature, višine in krvnega pritiska.
 
 	var margin = {
@@ -374,14 +489,6 @@ function telesnaTemperaturaIzpis(podatkiTelTemp)
 
 function telesnaTezaIzpis(podatkiTelTeza)
 {
-	podatkiTelTeza.sort(function(b,a){	
-		if(a.cas < b.cas)
-			return -1;
-		else if(a.cas > b.cas)
-			return 1;
-		return 0;	
-	});
-
 	for(var key in podatkiTelTeza)
 	{
 		$("#tabela_telTez tr:last").after("<tr><td>" + podatkiTelTeza[key]["cas"] + "</td><td>" + podatkiTelTeza[key]["teza"] + "</td><tr>");
@@ -391,14 +498,6 @@ function telesnaTezaIzpis(podatkiTelTeza)
 
 function krvniTlakIzpis(podatkiTelTlak)
 {
-	podatkiTelTlak.sort(function(b,a){	
-		if(a.cas < b.cas)
-			return -1;
-		else if(a.cas > b.cas)
-			return 1;
-		return 0;	
-	});
-
 	for(key in podatkiTelTlak)
 	{
 		$("#tabela_krvniTlak tr:last").after("<tr><td>" + podatkiTelTlak[key]["cas"] + "</td><td>" + podatkiTelTlak[key]["sistolicni"] + "</td><td>" + podatkiTelTlak[key]["diastolicni"] + "</td></tr>");
@@ -479,6 +578,7 @@ $(document).ready(function(){
 		$("#tabela_zdravil").addClass("table-hover");
 		$(zdravilo).removeClass("alert-info");
 		$("#detailZdravilo").css("visibility", "hidden");
+		$("#zdravilo_info").css("visibility", "hidden");
 
 
 		zdravilo = target.target.parentNode;
@@ -499,6 +599,7 @@ $(document).ready(function(){
 				$("#zdravilaSummary").html(jsonPodatki[podatkiZdravil[zdravilo.id]["zdravilo"]].summary);
 				$("#imeZdravila").text(podatkiZdravil[zdravilo.id]["zdravilo"]);
 				$("#detailZdravilo").css("visibility", "visible");
+				$("#zdravilo_info").css("visibility", "visible");
 
 			}
 
